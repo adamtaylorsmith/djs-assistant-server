@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('redbadgeapp', 'postgres', 'letmeinat1', {
-    host: 'localhost',
-    dialect: 'postgres'
-});
-// const sequelize = new Sequelize(process.env.DATABASE_URL);
+// const sequelize = new Sequelize('redbadgeapp', 'postgres', 'letmeinat1', {
+//     host: 'localhost',
+//     dialect: 'postgres'
+// });
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 sequelize.authenticate().then(
     function() {
         console.log('redbadgeapp postgres DB');
