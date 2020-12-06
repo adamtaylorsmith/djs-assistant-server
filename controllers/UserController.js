@@ -7,9 +7,9 @@ const UserController = Router();
 
 UserController.post('/register', async (req, res) => {
   console.log('YOURE IN');
-  let email = req.body.user.email;
-  let username = req.body.user.username;
-  let pass = req.body.user.password;
+  let email = req.body.email;
+  let username = req.body.username;
+  let pass = req.body.password;
   //let admin = req.body.user.isAdmin;
 
   try {
@@ -31,15 +31,15 @@ UserController.post('/register', async (req, res) => {
 });
 
 UserController.post('/login', async (req, res) => {
-  let username = req.body.user.username;
-  let password = req.body.user.password;
+  let username = req.body.username;
+  let password = req.body.password;
   try {
     let loginUser = await User.findOne( { where: { username } } );
     if ( loginUser && await bcrypt.compare(password, loginUser.password)) {
       const token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET);
       res.status(200).json({
-        message: 'Login successful',
-        token
+        message: loginUser.id,
+        token,
       });
     } else {
       res.status(401).json({

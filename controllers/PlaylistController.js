@@ -1,10 +1,10 @@
 //const {Router, response} = require('express');
-//const {Playlist} = require('../models');
+const {Playlist} = require('../models');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {Router} = require('express');
-const {User} = require('../models');
+//const {User} = require('../models');
 // const sequelize = require('../db');
 //const Playlist = require('../models/playlistModel');
 
@@ -15,7 +15,7 @@ PlaylistController.route('/')
     try {
       const playlists = await Playlist.findAll({
         where: {
-          owner_id: req.user.id
+          owner_id: req.user.id 
         }
       });
       if (playlists) {
@@ -33,36 +33,61 @@ PlaylistController.route('/')
       });
     }
   })
-  .post(function(req, res) {
-    const playlist = req.body.playlist.playlist_id;
-  // try {
-  //   await User.create({
-  //     email: email,
-  //     password: bcrypt.hashSync(pass, 10)
-  //   })
-    Playlist.create({
-      playlist_id: playlist,
-      owner_id: req.user.id,
-    });
-    res.json({
-      message: "Playlist entry created hooray!",
-    });
-    function createError(err) {
-      res.send(500, err.message);
+  .post(async(req, res) => {
+    const playlist = req.body.playlist_id;
+    try {
+      await Playlist.create({
+        playlist_id: playlist,
+        owner_id: req.user.id,
+      });
+      if (playlist) {
+        res.status(200).json({
+          message: "Playlist entry created hooray!",
+        });
+      } else {
+        res.status(404).json({
+          message: "Sorry no playlists found for user"
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Failed to create entry son"
+      });
     }
-    // } catch (error) {
-    //   res.status(500).json({
-    //     message: "Failed to create entry"
-    //   });
-    // }
+  })
+  .delete(async(req,res) => {
+    try { 
+      const toRemove = await Playlist.findOne({ 
+        where: {
+          playlist_id: req.params.playlist_id,
+          //owner_id: req.user.id
+        }
+      });    
+      toRemove
+        ? toRemove.destroy()
+        : res.status(404).json({
+          message: "FAILED SON"
+        });
+      res.status(200).json({
+        message: "Playlist ID DESTROYED sON!",
+      })
+    } catch (e) {
+      res.status(500).json({
+        message: "SUPER FAIL"
+      })
+    }
   })
   .put(async(req,res) => {
     try {
-      const playlistId = req.body.playlist.playlist_id;
+      const playlistId = req.body.playlist_id;
       const toUpdate = await Playlist.findOne({ 
-        playlist_id: playlistId
-      },
-      { where: {id: req.params.id}})
+        where: {
+          playlist_id: playlist,
+        owner_id: req.user.id,
+          //playlist_id: req.params.id,
+          id: req.params.id
+        }
+      })
       console.log("PARAMS", req.params.id)
       if (toUpdate && playlistId) {
         toUpdate.playlist_id = playlistId;
@@ -80,6 +105,6 @@ PlaylistController.route('/')
         message: "SUPER FAIL"
       })
     }
-  });  
+  }); 
 
 module.exports = PlaylistController;

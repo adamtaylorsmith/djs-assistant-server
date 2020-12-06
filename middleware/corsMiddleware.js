@@ -6,3 +6,5 @@ const CorsMiddleware = (req, res, next) => {
 }
 
 module.exports = CorsMiddleware;
+
+// Origin, X-Requested-With, Content-Type, Accept, Authorization

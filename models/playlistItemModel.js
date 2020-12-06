@@ -11,18 +11,34 @@ const PlaylistItem = db.define('playlistItem', {
     allowNull: false
   },
   year: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   length: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   bpm: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: true
   },
   video: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  loud: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  meter: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  key: {
     type: DataTypes.STRING,
     allowNull: true
   },

@@ -1,10 +1,10 @@
 //const {Router, response} = require('express');
-//const {PlaylistItem} = require('../models');
+const {PlaylistItem} = require('../models');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {Router} = require('express');
-const {User} = require('../models');
+//const {User} = require('../models');
 // const sequelize = require('../db');
 // const PlaylistItem = require('../models/playlistItemModel');
 
@@ -35,61 +35,109 @@ PlaylistItemController.route('/:id')
         });
      }
   })
-  .post(function(req, res) {
-    let artist = req.body.playlistItem.artist;
-    let title = req.body.playlistItem.title;
-    let year = req.body.playlistItem.year;
-    let length = req.body.playlistItem.length;
+  .post(async(req, res) => {
+    let artist = req.body.artist;
+    let title = req.body.title;
+    let year = req.body.year;
+    let length = req.body.length;
+    let bpm = req.body.bpm;
+    let video = req.body.video;
+    let loud = req.body.loud;
+    let meter = req.body.meter;
+    let image = req.body.image;
+    let key = req.body.key;
     let playlistId = req.params.id;
     let owner = req.user.id;
-    PlaylistItem.create({
-      artist: artist,
-      title: title,
-      year: year,
-      length: length,
-      playlist_id: playlistId,
-      owner_id: owner
-    });
-    res.json({
-      message: "Playlist entry created son!!!",
-      //entry: newItem
-    });
-    function createError(err) {
-      res.send(500, err.message);
-    }
-    // } catch (error) {
-    //   console.log(error);
-    //   res.status(500).json({
-    //     message: "Failed to create entry"
-    //   });
-    
-  })
-  .delete(async (req, res) => {
-    const owner = req.user.id;
-    const playlist = req.params.id;
-    const data = req.body.playlistItem.id;
     try {
-      const toRemove = await PlaylistItem.findOne({
+      const items = await PlaylistItem.create({
+        artist: artist,
+        title: title,
+        year: year,
+        length: length,
+        bpm: bpm,
+        video: video,
+        loud: loud,
+        meter: meter,
+        image: image,
+        key: key,
+        playlist_id: playlistId,
+        owner_id: owner
+      })
+      if (items) {
+        res.status(200).json({
+          message: "Playlist entry created son!!!",
+          results: items
+        });
+      } else {
+        res.status(404).json({
+          message: "Failed to create entry"
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: "Failed to create entry"
+      });
+    }
+    // function createError(err) {
+    //   res.send(500, err.message);
+    // }
+  })
+  .delete(async(req,res) => {
+    // const playlistId = req.body.playlist_id;
+    //   const toRemove = await Playlist.findOne({ 
+    //     where: {
+    //       playlist_id: playlistId,
+    //     }
+    //   });
+    try {
+      //const playlistItemId = req.body.id;
+      const toRemove = await Playlist.findOne({ 
         where: {
-          playlist_id: playlist,
-          owner_id: owner,
-          id: data
-        },
+          //playlist_id: req.params.id
+          id: req.body.id
+        }
       });
       toRemove
         ? toRemove.destroy()
         : res.status(404).json({
-          message: "Entry not found or entry does not belong to user",
-        });
+          message: "FAILED SON"
+        })
       res.status(200).json({
-        message: "Successfully removed entry",
-      });
+        message: "Playlist ID DESTROYED sON!",
+      })
     } catch (error) {
       res.status(500).json({
-        message: "Failed to delete entry",
-      });
+        message: "SUPER FAIL"
+      })
     }
   });
+  // .delete(async (req, res) => {
+  //   const owner = req.user.id;
+  //   const playlist = req.params.id;
+  //   const data = req.body.id;
+  //   try {
+  //     const toRemove = await PlaylistItem.findOne({
+  //       where: {
+  //         playlist_id: playlist,
+  //         owner_id: owner,
+  //         id: data
+  //       },
+  //     });
+  //     toRemove
+  //       ? toRemove.destroy()
+  //       : res.status(404).json({
+  //         message: "Entry not found or entry does not belong to user",
+  //       });
+  //     res.status(200).json({
+  //       message: "Successfully removed entry",
+  //     });
+  //   } catch (error) {
+  //     res.status(500).json({
+  //       message: "Failed to delete entry",
+  //     });
+  //   }
+  // });
 
   // PlaylistItemController.route('/:id')
   // .put(async (req, res) => {
