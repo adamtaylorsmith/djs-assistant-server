@@ -84,16 +84,16 @@ PlaylistItemController.route('/:id')
     // }
   })
   .delete(async(req,res) => {
-    console.log(req.user.id)
+    //console.log(req.user.id)
     const data = req.body.id;
-    const location = req.params.id;
-    const owner = req.user.id;
+    //const location = req.params.id;
+    //const owner = req.user.id;
     try { 
-      const toRemove = await Playlist.findOne({ 
+      const toRemove = await PlaylistItem.findOne({ 
         where: {
           id: data,
-          playlist_id: location,
-          owner_id: owner
+          //playlist_id: location,
+          //owner_id: owner
         }
       });    
       toRemove
@@ -110,6 +110,54 @@ PlaylistItemController.route('/:id')
       })
     }
   })
+  .put(async(req,res) => {
+    let location = req.body.id;
+    let artist = req.body.artist;
+    let title = req.body.title;
+    let year = req.body.year;
+    let length = req.body.length;
+    let bpm = req.body.bpm;
+    let video = req.body.video;
+    let loud = req.body.loud;
+    let meter = req.body.meter;
+    let image = req.body.image;
+    let key = req.body.key;
+    let playlistId = req.params.id;
+    let owner = req.user.id;
+    try {
+      const toUpdate = await PlaylistItem.findOne({ 
+        where: {
+          playlist_id: playlistId,
+          id: location,
+          owner_id: owner
+        }
+      })
+      if (toUpdate) {
+        toUpdate.artist = artist;
+        toUpdate.title = title;
+        toUpdate.year = year;
+        toUpdate.length = length;
+        toUpdate.bpm = bpm;
+        toUpdate.video = video;
+        toUpdate.loud = loud;
+        toUpdate.meter = meter;
+        toUpdate.image = image;
+        toUpdate.key = key;
+        await toUpdate.save();
+        res.status(200).json({
+          message: "Playlist name changed hooray!",
+        })
+      } else {
+        res.status(404).json({ 
+          message: "FAILED SON"
+        })
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "SUPER FAIL"
+      })
+    }
+  });
 
   // .delete(async (req, res) => {
   //   const owner = req.user.id;
