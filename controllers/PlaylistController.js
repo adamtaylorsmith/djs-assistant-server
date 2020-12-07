@@ -56,11 +56,12 @@ PlaylistController.route('/')
     }
   })
   .delete(async(req,res) => {
+    const data = req.body.id
     try { 
       const toRemove = await Playlist.findOne({ 
         where: {
-          playlist_id: req.params.playlist_id,
-          //owner_id: req.user.id
+          id: data,
+          // owner_id: req.user.id
         }
       });    
       toRemove
@@ -78,22 +79,21 @@ PlaylistController.route('/')
     }
   })
   .put(async(req,res) => {
+    //console.log(req.params.id)
+    const playlistId = req.body.playlist_id;
+    const location = req.body.id;
     try {
-      const playlistId = req.body.playlist_id;
       const toUpdate = await Playlist.findOne({ 
         where: {
-          playlist_id: playlist,
-        owner_id: req.user.id,
-          //playlist_id: req.params.id,
-          id: req.params.id
+          id: location,
+          //owner_id: req.user.id
         }
       })
-      console.log("PARAMS", req.params.id)
-      if (toUpdate && playlistId) {
+      if (toUpdate) {
         toUpdate.playlist_id = playlistId;
         await toUpdate.save();
         res.status(200).json({
-          message: "Playlist ID changed hooray!",
+          message: "Playlist name changed hooray!",
         })
       } else {
         res.status(404).json({ 

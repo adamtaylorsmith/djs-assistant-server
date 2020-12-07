@@ -34,6 +34,3 @@ db.authenticate()
 .then(() => {
   app.listen(process.env.PORT, () => console.log(`[server]: Listening on http://localhost:${process.env.PORT}`));
 })
-
-// https://djs-assistant-server.herokuapp.com/ | 
-// https://git.heroku.com/djs-assistant-server.git

@@ -84,34 +84,33 @@ PlaylistItemController.route('/:id')
     // }
   })
   .delete(async(req,res) => {
-    // const playlistId = req.body.playlist_id;
-    //   const toRemove = await Playlist.findOne({ 
-    //     where: {
-    //       playlist_id: playlistId,
-    //     }
-    //   });
-    try {
-      //const playlistItemId = req.body.id;
+    console.log(req.user.id)
+    const data = req.body.id;
+    const location = req.params.id;
+    const owner = req.user.id;
+    try { 
       const toRemove = await Playlist.findOne({ 
         where: {
-          //playlist_id: req.params.id
-          id: req.body.id
+          id: data,
+          playlist_id: location,
+          owner_id: owner
         }
-      });
+      });    
       toRemove
         ? toRemove.destroy()
         : res.status(404).json({
           message: "FAILED SON"
-        })
+        });
       res.status(200).json({
         message: "Playlist ID DESTROYED sON!",
       })
-    } catch (error) {
+    } catch (e) {
       res.status(500).json({
         message: "SUPER FAIL"
       })
     }
-  });
+  })
+
   // .delete(async (req, res) => {
   //   const owner = req.user.id;
   //   const playlist = req.params.id;
