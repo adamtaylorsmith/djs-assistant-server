@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
-// const sequelize = new Sequelize(process.env.DATABASE_URL, {
-//     dialect: 'postgres'
-// });
-const sequelize = new Sequelize('xtranewredbadgeapp', 'postgres', 'letmeinat1', {
-    host: 'localhost',
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres'
 });
+// const sequelize = new Sequelize('xtranewredbadgeapp', 'postgres', 'letmeinat1', {
+//     host: 'localhost',
+//     dialect: 'postgres'
+// });
 
 sequelize.authenticate().then(
     function() {
@@ -22,9 +22,3 @@ sequelize.authenticate().then(
 //             // PlaylistItem.belongsTo(Playlist);
 
  module.exports = sequelize;
-
-// const { Sequelize } = require('sequelize');
-
-// const db = new Sequelize(process.env.DATABASE_URL);
-
-// module.exports = db; 
