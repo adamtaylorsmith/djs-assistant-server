@@ -145,7 +145,7 @@ PlaylistItemController.route('/:id')
         toUpdate.key = key;
         await toUpdate.save();
         res.status(200).json({
-          message: "Playlist name changed hooray!",
+          message: "Playlist item changed hooray!",
         })
       } else {
         res.status(404).json({ 
